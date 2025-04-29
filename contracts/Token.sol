@@ -19,10 +19,10 @@ contract MyToken is ERC20 {
 
 
     constructor(address _treasury, address _liquidityPool) ERC20("MyToken", "MTK") {
-        owner = msg.sender;
-        treasury = _treasury;
-        liquidityPool = _liquidityPool;
-        _mint(owner, 1_000_000 * 10 ** decimals());
+    owner = msg.sender;
+    treasury = _treasury;
+    liquidityPool = _liquidityPool;
+    _mint(owner, 1_000_000 * 10 ** decimals());
     }
 
     function transfer(address to, uint256 amount) public override returns (bool) {
