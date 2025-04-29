@@ -17,10 +17,7 @@ contract MyToken is ERC20 {
         _;
     }
 
-    /**
-     * @param _treasury Address to receive collected tax
-     * @param _liquidityPool Address of the liquidity pool
-     */
+
     constructor(address _treasury, address _liquidityPool) ERC20("MyToken", "MTK") {
         owner = msg.sender;
         treasury = _treasury;
@@ -28,18 +25,15 @@ contract MyToken is ERC20 {
         _mint(owner, 1_000_000 * 10 ** decimals());
     }
 
-    /**
-     * @dev Override ERC20 transfer: enforces trading toggle, max tx, max wallet, and tax.
-     */
     function transfer(address to, uint256 amount) public override returns (bool) {
-        // Allow only owner transfers before trading is enabled
+        
         if (!tradingEnabled) {
             require(msg.sender == owner || to == owner, "Trading not enabled");
         }
 
         uint256 supply = totalSupply();
-        uint256 maxTx    = (maxTxPercent    * supply) / 1000; // 1% of supply
-        uint256 maxWallet= (maxWalletPercent* supply) / 1000; // 1.5% of supply
+        uint256 maxTx    = (maxTxPercent    * supply) / 1000; 
+        uint256 maxWallet= (maxWalletPercent* supply) / 1000; 
 
         require(amount <= maxTx, "Exceeds max transaction amount");
         require(balanceOf(to) + amount <= maxWallet, "Exceeds max wallet size");
@@ -53,15 +47,10 @@ contract MyToken is ERC20 {
         return true;
     }
 
-    /** @dev Enable trading. Only owner. */
     function enableTrading() external onlyOwner {
         tradingEnabled = true;
     }
 
-    /** 
-     * @dev Add tokens to liquidity pool from owner balance. Only owner. 
-     * @param liquidityAmount Amount of tokens to send
-     */
     function addLiquidity(uint256 liquidityAmount) external onlyOwner {
         transfer(liquidityPool, liquidityAmount);
     }
